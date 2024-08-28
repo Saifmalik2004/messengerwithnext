@@ -14,8 +14,10 @@ export default function Home() {
     sm:px-6
     lg:px-8
     bg-gray-100
+    
      ">
-     <div className="sm:mx-auto">
+      
+     <div className="sm:mx-auto  ">
       <Image
       alt="logo"
       height='48'
