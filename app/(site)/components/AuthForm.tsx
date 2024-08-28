@@ -12,7 +12,7 @@ type Variant = 'LOGIN' | 'REGISTER';
 function AuthForm() {
     const [variant, setVariant] = useState<Variant>("REGISTER");
     const [isLoading, setIsLoading] = useState(false);
-    const [showPassword, setShowPassword] = useState(false); 
+    const [showPassword, setShowPassword] = useState(false);
     const [password, setPassword] = useState(''); // Track password value
 
     const toggleVariant = useCallback(() => {
@@ -26,9 +26,7 @@ function AuthForm() {
     const {
         register,
         handleSubmit,
-        formState: {
-            errors
-        }
+        formState: { errors }
     } = useForm<FieldValues>({
         defaultValues: {
             name: '',
@@ -46,7 +44,7 @@ function AuthForm() {
             // next auth sign in
         }
 
-        console.log('data',data)
+        console.log('data', data)
     }
 
     const socialAction = (action: string) => {
@@ -54,7 +52,7 @@ function AuthForm() {
     }
 
     return (
-        <div className='mt-8 sm:mx-auto sm:w-full sm:max-w-md '>
+        <div className='mt-8 sm:mx-auto sm:w-full sm:max-w-md px-4 sm:px-0'> 
             <div className="bg-white px-4 py-8 shadow sm:rounded-lg sm:px-10">
                 <form className='space-y-6' onSubmit={handleSubmit(onSubmit)}>
                     {variant === 'REGISTER' && (
@@ -100,14 +98,14 @@ function AuthForm() {
                             fullWidth
                             type='submit'
                         >
-                            {variant=== "LOGIN" ? 'Sign in' : "Register"}
+                            {variant === "LOGIN" ? 'Sign in' : "Register"}
                         </Button>
                     </div>
                 </form>
                 <div className="mt-6">
                     <div className="relative">
                         <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-gray-300"/>
+                            <div className="w-full border-t border-gray-300" />
                         </div>
                         <div className='relative flex justify-center text-gray-500 text-sm'>
                             <span className='bg-white px-2 text-gray-500'>
@@ -116,19 +114,20 @@ function AuthForm() {
                         </div>
                     </div>
                     <div className="mt-6 flex gap-2">
-                        <AuthSocialButton Icon={BsGithub} onClick={()=> socialAction('github')}/>
-                        <AuthSocialButton Icon={BsGoogle} onClick={()=> socialAction('google')}/>
+                        <AuthSocialButton Icon={BsGithub} onClick={() => socialAction('github')} />
+                        <AuthSocialButton Icon={BsGoogle} onClick={() => socialAction('google')} />
                     </div>
                 </div>
                 <div className="flex gap-2 justify-center text-sm mt-6 px-2 text-gray-600">
                     <div>
-                        {variant==="LOGIN" ? "New to Zylo":"Already have an account?"}
+                        {variant === "LOGIN" ? "New to Zylo" : "Already have an account?"}
                     </div>
                     <div
-                        onClick={toggleVariant} 
+                        onClick={toggleVariant}
                         className="underline cursor-pointer text-sky-500">
-                        {variant==="LOGIN"? "Create an account":"Login"}
+                        {variant === "LOGIN" ? "Create an account" : "Login"}
                     </div>
+
                 </div>
             </div>
         </div>
