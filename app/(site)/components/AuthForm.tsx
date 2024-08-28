@@ -13,6 +13,8 @@ function AuthForm() {
     const [variant, setVariant] = useState<Variant>("REGISTER");
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false); 
+    const [password, setPassword] = useState(''); // Track password value
+
     const toggleVariant = useCallback(() => {
         if (variant === "LOGIN") {
             setVariant('REGISTER');
@@ -56,62 +58,61 @@ function AuthForm() {
             <div className="bg-white px-4 py-8 shadow sm:rounded-lg sm:px-10">
                 <form className='space-y-6' onSubmit={handleSubmit(onSubmit)}>
                     {variant === 'REGISTER' && (
-                       
-                            <Input
-                                id='name'
-                                label='Name'
-                                register={register}
-                                errors={errors}
-                            />
-                            
-                            
-                        
+                        <Input
+                            id='name'
+                            label='Name'
+                            register={register}
+                            errors={errors}
+                            disabled={isLoading}
+                        />
                     )}
                     <Input
-                                        id='email'
-                                        label='Email'
-                                        type='text'
-                                        register={register}
-                                        errors={errors}
-                                    />
-                                    <div className="relative">
-                                    <Input
-                                        id='password'
-                                        label='Password'
-                                        type={showPassword ? 'text' : 'password'}
-                                        register={register}
-                                        errors={errors}
-                                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-2 top-3/4 transform -translate-y-1/2"
-                    >
-                      {showPassword ? <FiEyeOff className="w-5 h-5" /> : <BsEye className="w-5 h-5" />}
-                    </button>
-                  </div>
-                  <div>
-                    <Button
-                    disabled={isLoading}
-                    fullWidth
-                    type='submit'
-                    >
-                        {variant=== "LOGIN" ? 'Sign in' : "Register"}
-                    </Button>
-                  </div>
+                        id='email'
+                        label='Email'
+                        type='text'
+                        register={register}
+                        errors={errors}
+                        disabled={isLoading}
+                    />
+                    <div className="relative">
+                        <Input
+                            id='password'
+                            label='Password'
+                            type={showPassword ? 'text' : 'password'}
+                            register={register}
+                            errors={errors}
+                            disabled={isLoading}
+                            onChange={(e) => setPassword(e.target.value)} // Track password input
+                        />
+                        {password.length > 0 && ( // Conditionally render the eye button
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-2 top-3/4 transform -translate-y-1/2"
+                            >
+                                {showPassword ? <FiEyeOff className="w-5 h-5" /> : <BsEye className="w-5 h-5" />}
+                            </button>
+                        )}
+                    </div>
+                    <div>
+                        <Button
+                            disabled={isLoading}
+                            fullWidth
+                            type='submit'
+                        >
+                            {variant=== "LOGIN" ? 'Sign in' : "Register"}
+                        </Button>
+                    </div>
                 </form>
                 <div className="mt-6">
                     <div className="relative">
                         <div className="absolute inset-0 flex items-center">
                             <div className="w-full border-t border-gray-300"/>
-
-                            
-
                         </div>
                         <div className='relative flex justify-center text-gray-500 text-sm'>
-                        <span className='bg-white px-2 text-gray-500'>
-                         Or continue with
-                         </span>
+                            <span className='bg-white px-2 text-gray-500'>
+                                Or continue with
+                            </span>
                         </div>
                     </div>
                     <div className="mt-6 flex gap-2">
@@ -124,11 +125,10 @@ function AuthForm() {
                         {variant==="LOGIN" ? "New to Zylo":"Already have an account?"}
                     </div>
                     <div
-                    onClick={toggleVariant} 
-                    className="underline cursor-pointer text-sky-500">
-                      {variant==="LOGIN"? "Create an account":"Login"}
+                        onClick={toggleVariant} 
+                        className="underline cursor-pointer text-sky-500">
+                        {variant==="LOGIN"? "Create an account":"Login"}
                     </div>
-
                 </div>
             </div>
         </div>
