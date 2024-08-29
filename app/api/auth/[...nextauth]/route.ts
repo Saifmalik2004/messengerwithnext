@@ -24,10 +24,10 @@ export const authOptions:AuthOptions={
             name:"credentials",
             credentials:{
                 email: { label: "email", type: "text",  },
-                password: { label: "Password", type: "password" }
+                password: { label: "password", type: "password" }
             },
             async authorize(credentials:any):Promise<any>  {
-               if(!credentials?.email || credentials?.password){
+               if(!credentials?.email || !credentials?.password){
                 throw new Error('Invalid Credential');
                }
                 try {
