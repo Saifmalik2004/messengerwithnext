@@ -14,7 +14,7 @@ currentUser
 })=> {
     const routes=useRoutes();
     const [isOpen,setIsOpen]=useState(false);
-    console.log('c',currentUser)
+   
   return (
     <div className="
      hidden
