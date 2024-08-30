@@ -72,7 +72,7 @@ model Message{
 id String @id @default(auto()) @map("_id") @db.ObjectId
 body String?
 image String?
-createdat DateTime @default(now())
+createdAt DateTime @default(now())
 
 seenIds String[] @db.ObjectId
 seen User[] @relation("Seen",fields: [seenIds], references: [id])
