@@ -15,6 +15,7 @@ const Avatar:React.FC<AvatarProps>=({
         <div className="relative inline-block rounded-full border border-gray-300 overflow-hidden h-9 w-9 md:h-11  md:w-11">
 <Image
 alt="Avatar"
+className="object-contain"
 src={user?.image || '/images/place.png'}
 fill/>
     </div>
