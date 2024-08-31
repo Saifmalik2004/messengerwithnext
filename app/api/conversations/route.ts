@@ -1,5 +1,6 @@
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import prismadb from "@/app/libs/prismadb";
+import { pusherServer } from "@/app/libs/pusher";
 
 import { NextResponse } from "next/server";
 
@@ -45,8 +46,17 @@ export async function POST(
                     users:true
                 }
             });
-            return NextResponse.json(newConversation)
-        }
+            newConversation.users.forEach((user) => {
+                if (user.email) {
+                  pusherServer.trigger(user.email, 'conversation:new', newConversation);
+                }
+              })
+        
+              return NextResponse.json(newConversation);
+            }
+        
+           
+        
 
         const existingConversations=await prismadb.conversation.findMany({
             where:{
@@ -87,7 +97,12 @@ export async function POST(
                 users:true
             }
         });
-
+        newConversation.users.map((user) => {
+            if (user.email) {
+              pusherServer.trigger(user.email, 'conversation:new', newConversation);
+            }
+          })
+      
         return NextResponse.json(newConversation)
         
     } catch (error:any) {
