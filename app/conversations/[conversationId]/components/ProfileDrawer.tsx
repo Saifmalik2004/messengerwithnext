@@ -7,6 +7,7 @@ import { format } from "date-fns";
 import { Dialog,DialogPanel, Transition,TransitionChild } from "@headlessui/react";
 import { IoClose, IoTrash } from "react-icons/io5";
 import Avatar from "@/app/components/Avatar";
+import ConfirmModal from "./ConfirmModal";
 
 
 interface ProfileDrawerProps {
@@ -45,7 +46,10 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
 
   return (
     <>
-      
+      <ConfirmModal
+        isOpen={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+      />
       <Transition show={isOpen} as={Fragment}>
         
         <Dialog as="div" className="relative z-50" onClose={onClose}>
