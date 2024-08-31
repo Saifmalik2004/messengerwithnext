@@ -73,20 +73,19 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
               </p>
             )}
           </div>
-          <div className="flex items-center space-x-2">
-            <p className={clsx(
-              'truncate text-sm flex ',
-              hasSeen ? 'text-gray-500' : 'text-[black] font-medium'
-            )}>
-                {true && (
-              <FaCheckDouble color={hasSeen ? '#5491be': 'gray'}
-                className='text-xs mr-2 relative top-1 '
-               />
+          
+          <p
+            className={clsx(`
+              truncate
+              text-sm
+            `,
+              hasSeen ? 'text-gray-500' : 'text-black font-medium'
             )}
-              {lastMessageText}
-            </p>
+          >
+            {lastMessageText}
+          </p>
             
-          </div>
+          
         </div>
       </div>
     </div>
