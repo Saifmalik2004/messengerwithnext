@@ -1,15 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-
 import useConversation from "@/app/hooks/useConversation";
 import { FullMessageType } from "@/app/types";
-
 import axios from "axios";
 import MessageBox from "./MessageBox";
 import { pusherClient } from "@/app/libs/pusher";
 import { find } from "lodash";
-
 
 interface BodyProps {
   initialMessages: FullMessageType[]
@@ -20,19 +17,42 @@ const Body: React.FC<BodyProps> = ({
 }) => {
   const [messages, setMessages] = useState(initialMessages);
   const bottomRef = useRef<HTMLDivElement>(null);
-
+  const [isVisible, setIsVisible] = useState(true); // Track visibility
   const { conversationId } = useConversation();
 
+  // Intersection Observer callback
+  const handleVisibilityChange = (entries: IntersectionObserverEntry[]) => {
+    const [entry] = entries;
+    if (entry.isIntersecting) {
+      setIsVisible(true);
+      axios.post(`/api/conversations/${conversationId}/seen`);
+    } else {
+      setIsVisible(false);
+    }
+  };
+
   useEffect(() => {
-    axios.post(`/api/conversations/${conversationId}/seen`)
-  }, [conversationId]);
+    // Set up the Intersection Observer
+    const observer = new IntersectionObserver(handleVisibilityChange, {
+      threshold: 0.5 // Adjust threshold as needed
+    });
+
+    if (bottomRef.current) {
+      observer.observe(bottomRef.current);
+    }
+
+    return () => {
+      if (bottomRef.current) {
+        observer.unobserve(bottomRef.current);
+      }
+    };
+  }, [bottomRef, conversationId]);
+
   useEffect(() => {
     pusherClient.subscribe(conversationId);
-    bottomRef?.current?.scrollIntoView();
+    bottomRef.current?.scrollIntoView();
 
     const messageHandler = (message: FullMessageType) => {
-      axios.post(`/api/conversations/${conversationId}/seen`)
-
       setMessages((current) => {
         if (find(current, { id: message.id })) {
           return current;
@@ -41,7 +61,7 @@ const Body: React.FC<BodyProps> = ({
         return [...current, message];
       });
 
-      bottomRef?.current?.scrollIntoView();
+      bottomRef.current?.scrollIntoView();
     };
 
     const updateMessageHandler = (newMessage: FullMessageType) => {
@@ -55,16 +75,16 @@ const Body: React.FC<BodyProps> = ({
     };
 
     pusherClient.bind('messages:new', messageHandler);
-    pusherClient.bind('message:update', updateMessageHandler)
+    pusherClient.bind('message:update', updateMessageHandler);
 
     return () => {
       pusherClient.unsubscribe(conversationId);
       pusherClient.unbind('messages:new', messageHandler);
       pusherClient.unbind('message:update', updateMessageHandler);
-    }
+    };
   }, [conversationId]);
 
-  return ( 
+  return (
     <div className="flex-1 overflow-y-auto">
       {messages.map((message, i) => (
         <MessageBox
@@ -75,7 +95,7 @@ const Body: React.FC<BodyProps> = ({
       ))}
       <div ref={bottomRef} className="pt-24" />
     </div>
-   );
+  );
 }
- 
+
 export default Body;

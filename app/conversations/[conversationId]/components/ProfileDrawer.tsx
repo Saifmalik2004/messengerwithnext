@@ -45,7 +45,7 @@ const isActive=members.indexOf(otherUser?.email!) !== -1
     }
 
     return isActive? 'Active':'Offline'
-  }, [data ]);
+  }, [data,isActive ]);
 
   return (
     <>
