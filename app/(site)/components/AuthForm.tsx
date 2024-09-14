@@ -47,34 +47,52 @@ useEffect(()=>{
 
     const onSubmit: SubmitHandler<FieldValues> = (data) => {
         setIsLoading(true);
+    
         if (variant === 'REGISTER') {
-            axios.post("/api/register",data)
-            .then(()=> signIn('credentials',data))
-            .catch(()=> toast.error("Something Went Wrong!"))
-            .finally(()=> setIsLoading(false))
+            axios.post("/api/register", data)
+                .then(() => {
+                    // If registration is successful, try logging in
+                    signIn('credentials', data);
+                })
+                .catch((error) => {
+                    // Check if the error is related to the email format
+                    if (error.response && error.response.status === 400) {
+                        if (error.response.data === 'Invalid email format') {
+                            toast.error('Please enter a valid email address');
+                        } else if (error.response.data === 'Missing info') {
+                            toast.error('Please fill in all required fields');
+                        } else {
+                            toast.error('Something went wrong. Please try again.');
+                        }
+                    } else if (error.response && error.response.status === 409) {
+                        // Handle case where user already exists
+                        toast.error('User already exists with this email or name');
+                    } else {
+                        toast.error('Something went wrong. Please try again.');
+                    }
+                })
+                .finally(() => setIsLoading(false));
         }
-
-
+    
         if (variant === 'LOGIN') {
-           signIn('credentials',{
-            ...data,
-            redirect:false
-           })
-           .then((callback)=>{
-            if(callback?.error){
-                toast.error("Invalid credentials");
-            }
-            if(callback?.ok && !callback?.error){
-                toast.success('Logged in !')
-                router.push('/users')
-                
-            }
-           })
-           .finally(()=> setIsLoading(false))
+            signIn('credentials', {
+                ...data,
+                redirect: false,
+            })
+                .then((callback) => {
+                    if (callback?.error) {
+                        toast.error('Invalid credentials');
+                    }
+                    if (callback?.ok && !callback?.error) {
+                        toast.success('Logged in!');
+                        router.push('/users');
+                    }
+                })
+                .finally(() => setIsLoading(false));
         }
-
-        
-    }
+    };
+    
+    
 
     const socialAction = (action: string) => {
         setIsLoading(true);

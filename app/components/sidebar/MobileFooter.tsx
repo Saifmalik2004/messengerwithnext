@@ -5,6 +5,7 @@ import React, { useState } from 'react'
 import MobileItem from './MobileItem';
 import Avatar from '../Avatar';
 import { User } from '@prisma/client';
+import SettingsModal from './SettingsModal';
 interface MobileFooterProps{
   currentUser:User
 }
@@ -12,12 +13,18 @@ const MobileFooter:React.FC<MobileFooterProps>=({
   currentUser
 })=> {
     const routes=useRoutes();
-    const{isOpen} =UseConversation();
+     const{ isOpen} =UseConversation();
     const [settingIsOpen, setsettingIsOpen] = useState(false);
     if(isOpen){
         return null
     }
   return (
+  <>
+    <SettingsModal
+    currentUser={currentUser}
+    isOpen={settingIsOpen}
+    onClose={()=>setsettingIsOpen(false)}/>
+    
     <div className='fixed justify-between w-full bottom-0 z-40 flex items-center bg-white border-t-[1px] lg:hidden'>
     {routes.map((item)=>(
 <MobileItem label={item.label}
@@ -30,6 +37,7 @@ key={item.label} icon={item.icon} href={item.href} active={item.active} onClick=
           <Avatar user={currentUser} />
         </div>  
     </div>
+    </>
   )
 }
 
